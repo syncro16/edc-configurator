@@ -1,0 +1,24 @@
+{
+  "name": "edc-Configurator",
+  "productName": "DMN EDC Configurator",
+  "version": "1.0.0",
+  "description": "DMN-EDC32 Configurator",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "install": "electron-rebuild"
+  },
+  "repository": "",
+  "keywords": [],
+  "author": "dmn",
+  "license": "",
+  "devDependencies": {
+    "electron": "^1.7.9",
+    "electron-installer-windows": "^0.2.0",
+    "electron-rebuild": "^1.6.0",
+    "rebuild": "^0.1.2"
+  },
+  "dependencies": {
+    "serialport": "^6.0.4"
+  }
+}
