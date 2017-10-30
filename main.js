@@ -14,6 +14,45 @@ const parser = new CommandParser();
 const StringDecoder = require('string_decoder').StringDecoder;
 const decoder = new StringDecoder('latin1');
 
+const windows = {
+	instrumentation:{
+		file:"view/instrumentation.html",
+		x:600,
+		y:64,
+		width:640,
+		height:420,
+		count:0,
+		instances:[],
+	},
+	mapEditor:{
+		file:"view/mapEditor.html",		
+		x:64,
+		y:64,
+		width:320,
+		height:200,
+		count:0,
+		instances:[],		
+	},
+	pidEditor:{
+		file:"view/pidEditor.html",				
+		x:64,
+		y:64,
+		width:320,
+		height:200,
+		count:0,
+		instances:[],		
+	},
+	paramsEditor:{
+		file:"view/paramsEditor.html",				
+		x:64,
+		y:64,
+		width:320,
+		height:200,
+		count:0,
+		instances:[],		
+	}	
+}
+
 
 let serial = null;
 let serialKnownPorts = null;
@@ -23,11 +62,10 @@ let serialSelectedName = null;
 // be closed automatically when the JavaScript object is garbage collected.
 let consolewindow
 
-function createWindow () {
+function createConsoleWindow () {
 	// Create the browser window.
 	consoleWindow = new BrowserWindow({width: 400, height: 130})
-	mainWindow2 = new BrowserWindow({width: 800, height: 600})
-	consoleWindow.setPosition(32,32);
+	consoleWindow.setPosition(8,32);
 
 	// and load the index.html of the app.
 	consoleWindow.loadURL(url.format({
@@ -36,21 +74,13 @@ function createWindow () {
 		slashes: true
 	}))
 	
-/*	mainWindow2.loadURL(url.format({
-		pathname: path.join(__dirname, 'index.html'),
-		protocol: 'file:',
-		slashes: true
-	}))*/
-	// Open the DevTools.
-//	mainWindow.webContents.openDevTools()
-//	mainWindow2.webContents.openDevTools()
-	
 	// Emitted when the window is closed.
 	consoleWindow.on('closed', function () {
 		// Dereference the window object, usually you would store windows
 		// in an array if your app supports multi windows, this is the time
 		// when you should delete the corresponding element.
 		consoleWindow = null
+		app.quit();		
 	})
 	appMenuBuild();
 	
@@ -59,13 +89,23 @@ function createWindow () {
 		updateSerial();
 	})
 	/* pääikkunaksi konsoli	 */
-
-
-	/*s.list().then((a)=>{
-        console.log(a);
-	}).catch(console.log);
-	*/
 }
+
+function createWindow(type) {
+	let s = windows[type]
+//	console.log(s)
+	let w = new BrowserWindow({width: s.width, height: s.height,  webPreferences: { webSecurity: false }})
+	w.setPosition(s.x+s.count*22,s.y+s.count*22)
+	s.count++
+	// and load the index.html of the app.
+	w.loadURL(url.format({
+		pathname: path.join(__dirname, s.file),
+		protocol: 'file:',
+		slashes: true
+	}))	
+	s.instances.push(w)
+}
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -93,9 +133,7 @@ app.on('ready', () => {
 		
 	});
 	
-	
-
-	createWindow();
+	createConsoleWindow();
 });
 
 // Quit when all windows are closed.
@@ -111,7 +149,7 @@ app.on('activate', function () {
 	// On OS X it's common to re-create a window in the app when the
 	// dock icon is clicked and there are no other windows open.
 	if (consoleWindow === null) {
-		createWindow()
+		createConsoleWindow()
 	}
 })
 
@@ -125,10 +163,10 @@ function appMenuBuild() {
 		{
 			label: "File",
 			submenu: [
-				{label:"New Instrumentation window", click(a) {console.log(a)}},
-				{label:"New Parameter editor window", click() {console.log("moro")}},
-				{label:"New Map editor window", click() {console.log("moro")}},
-				{label:"New PID editor window", click() {console.log("moro")}},
+				{label:"New Instrumentation window",accelerator: 'CmdOrCtrl+N', click() {createWindow("instrumentation") }},
+				{label:"New Parameter editor window", click() {createParamEditorWindow() }},
+				{label:"New Map editor window", click() {createMapEditorWindow() }},
+				{label:"New PID editor window", click() {createPIDEditorWindow() }},
 				{type: 'separator'},
 				{label:"Open …", click() {console.log("moro")}},
 				{label:"Save As …", click() {console.log("moro")}},

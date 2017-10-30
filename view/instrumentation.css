@@ -1,0 +1,14 @@
+body {
+	background:#fff;
+	margin:10px;
+	color:#000;
+	font: menu;
+	height:100%;
+	width:100%;
+	background-size: cover;
+	overflow: hidden;   
+}
+
+#menu {
+	text-align: center;
+}
