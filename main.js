@@ -16,11 +16,12 @@ const decoder = new StringDecoder('latin1');
 
 const windows = {
 	instrumentation:{
+		fixedAspectRatio:true,
 		file:"view/instrumentation.html",
 		x:600,
 		y:64,
-		width:640,
-		height:420,
+		width:320,
+		height:340,
 		count:0,
 		instances:[],
 	},
@@ -96,6 +97,8 @@ function createWindow(type) {
 //	console.log(s)
 	let w = new BrowserWindow({width: s.width, height: s.height,  webPreferences: { webSecurity: false }})
 	w.setPosition(s.x+s.count*22,s.y+s.count*22)
+	if (s.fixedAspectRatio)
+		w.setAspectRatio(1);
 	s.count++
 	// and load the index.html of the app.
 	w.loadURL(url.format({
@@ -322,7 +325,7 @@ function serialSetConnectState(state) {
 		serial = new serialport(serialSelectedName,{baudRate:115200});
 		consoleMessage("Connected: "+serialSelectedName+"\n");
 		serialConnectionCheckOk = false;
-		sendSystemEvent("PING","test42");
+		sendSystemEvent("_INI","Configurator 1.0");
 
 		clearTimeout(serialConnectionCheckTimeout);
 		serialConnectionCheckTimeout = setTimeout(function() {
@@ -355,9 +358,24 @@ function receiveSystemEvent(eventName,data) {
 	/* forward event from the edc to application */
 	console.log("receiveSystemEvent:",eventName,"data:", data);
 	switch(eventName) {
-		case "PONG":
+		case "_RDY":
 			serialConnectionCheckOk=true;
 			consoleMessage(data+"\n");
+		break;
+		default:
+			if (eventName[0] == '_') {
+				consoleMessage("Got unsupported command:"+eventName)
+			} else {
+				// broadcast event to all windows
+				for (let item in windows) {
+					if (windows[item].instances && windows[item].instances.length) {
+						for (let i in windows[item].instances) {
+							console.log(windows[item].instances[i].webContents,'edc-'+eventName)
+							windows[item].instances[i].webContents.send('edc-'+eventName,data);
+						}
+					}
+				}
+			}
 		break;
 	}
 }

@@ -18,7 +18,7 @@ var gaugeDefaults = {
 
 var gaugeTypes = {
 	"RPM":{
-		"bindEdcValue":0x4242,
+		"bindEdcValue":0x1000,
 		"size":"large",		
 		"priority":1,
 		"init":	{
@@ -45,7 +45,7 @@ var gaugeTypes = {
 		}
 	},
 	"Boost":{
-		"bindEdcValue":0x4243,
+		"bindEdcValue":"4243",
 		"size":"large",		
 		"priority":1,		
 		"init":	{

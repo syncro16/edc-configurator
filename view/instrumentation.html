@@ -5,20 +5,20 @@
 	<title>Instruments</title>
 	<link rel="stylesheet" href="instrumentation.css" type="text/css"/>	
 	<script type="text/javascript" src="./lib/zepto.min.js"></script>
-	<script type="text/javascript" src="./lib/gauge.min.js"></script>
 	<script type="text/javascript" src="../settings/gauges.js"></script>
+	
+<!--	<script type="text/javascript" src="./instrumentation.js"></script>-->
 	
   </head>
   <body>
     <script>
       // You can also require other files to run in this process
-	  require('./instrumentation.js')
-
+	require('./instrumentation.js')
 	</script>
 	<div id='menu'>
 	</div>
-	<div id='gauge'>
-
+	<div id='gaugeContainer'>
+		<canvas id='gauge'></canvas>
 	</div>
   </body>
 </html>
